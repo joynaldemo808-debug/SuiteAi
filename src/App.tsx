@@ -1612,12 +1612,13 @@ Languages: ${resumeData.skills.languages}
                           <>
                             <Send className="w-5 h-5" />
                             {t[`${selectedTool.id}Button` as keyof typeof t] as string || selectedTool.buttonText}
+                          </>
                        )}
                       </button>
                     </div>
                 </div>
-
-                {/* Right Column: Output */}
+                      :
+                    {/* Right Column: Output */}
                 <div className="space-y-6">
                   <AnimatePresence>
                     {output && (
