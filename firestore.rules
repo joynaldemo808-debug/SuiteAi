@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (Firebase Auth UID)
+    // Fields:
+    //   - uid: string (required) - The user's UID
+    //   - email: string (required) - The user's email
+    //   - credits: number (required) - Remaining AI credits
+    //   - lastResetDate: string (required) - ISO date (YYYY-MM-DD) of last credit reset
+    //   - isPremium: boolean (required) - Premium status
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "Joynaldemo808@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.size() < 100 && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidDateString(dateStr) {
+      return dateStr is string && dateStr.size() == 10 && dateStr.matches("^\\d{4}-\\d{2}-\\d{2}$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser(data) {
+      return hasRequiredFields(['uid', 'email', 'credits', 'lastResetDate', 'isPremium']) &&
+             hasOnlyAllowedFields(['uid', 'email', 'credits', 'lastResetDate', 'isPremium', 'role']) &&
+             data.uid == request.auth.uid &&
+             data.uid.size() < 128 &&
+             data.email is string && isValidEmail(data.email) &&
+             data.credits is number &&
+             data.lastResetDate is string && isValidDateString(data.lastResetDate) &&
+             data.isPremium is bool &&
+             (!('role' in data) || (data.role is string && data.role.size() < 20));
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      
+      allow create: if isOwner(userId) && 
+                      isValidUser(request.resource.data) &&
+                      (!('role' in request.resource.data) || isAdmin());
+                      
+      allow update: if isOwner(userId) && 
+                      isValidUser(request.resource.data) &&
+                      (request.resource.data.role == resource.data.role || isAdmin()) &&
+                      (request.resource.data.uid == resource.data.uid) &&
+                      (request.resource.data.email == resource.data.email);
+    }
+
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}

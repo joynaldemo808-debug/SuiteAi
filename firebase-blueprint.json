@@ -1,0 +1,25 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and credit management",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "credits": { "type": "number" },
+        "lastResetDate": { "type": "string" },
+        "isPremium": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["user", "admin"] }
+      },
+      "required": ["uid", "email", "credits", "lastResetDate", "isPremium"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    }
+  }
+}
