@@ -1571,123 +1571,150 @@ INSTRUCTIONS: Improve the resume content provided above. Make the descriptions p
 
 </AnimatePresence>
 
-                        <div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
-                          <button
-                            onClick={() => setResumeStep(prev => Math.max(0, prev - 1))}
-                            disabled={resumeStep === 0}
-                            className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-0 transition-all flex items-center gap-2"
-                          >
-                            <ChevronLeft className="w-4 h-4" /> {t.prevStep}
-                          </button>
-                          
-                          {resumeStep < 5 ? (
-                            <button
-                              onClick={() => setResumeStep(prev => Math.min(5, prev + 1))}
-                              className="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center gap-2"
-                            >
-                              {t.nextStep} <ChevronRight className="w-4 h-4" />
-                            </button>
-                          ) : (
-                            <button
-                              onClick={handleGenerate}
-                              disabled={isLoading}
-                              className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-sm font-bold rounded-xl hover:shadow-xl hover:shadow-blue-200 dark:hover:shadow-none disabled:opacity-50 transition-all flex items-center gap-2"
-                            >
-                              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-                              {t.generateResume}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-6">
-                        <div className="space-y-2">
-                          <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.yourInput}</label>
-                          <textarea
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder={t[`${selectedTool.id}Placeholder` as keyof typeof t] as string || selectedTool.placeholder}
-                            className="w-full h-56 p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[2rem] focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 outline-none transition-all resize-none text-slate-800 dark:text-white placeholder:text-slate-400 font-medium"
-                          />
-                        </div>
-                        <button
-                          onClick={handleGenerate}
-                          disabled={isLoading || !input.trim()}
-                          className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-slate-800 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 dark:shadow-none disabled:shadow-none active:scale-[0.98]"
-                        >
-                          {isLoading ? (
-                            <>
-                              <Loader2 className="w-5 h-5 animate-spin" />
-                              {t.generating}
-                            </>
-                          ) : (
-                            <>
-                              <Send className="w-5 h-5" />
-                              {t[`${selectedTool.id}Button` as keyof typeof t] as string || selectedTool.buttonText}
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+<div className="flex items-center justify-between pt-8 border-t border-slate-100 dark:border-slate-800">
+  <button
+    onClick={() => setResumeStep((prev) => Math.max(0, prev - 1))}
+    disabled={resumeStep === 0}
+    className="px-6 py-2.5 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-0 transition-all flex items-center gap-2"
+  >
+    <ChevronLeft className="w-4 h-4" /> {t.prevStep}
+  </button>
 
-                  {/* Right Column: Output */}
-                  <div className="space-y-6">
-                    <AnimatePresence>
-                      {output && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="space-y-4 pt-4"
-                        >
-                          <div className="flex items-center justify-between">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t.result}</label>
-                            <div className="flex items-center gap-3">
-                              <button
-                                onClick={() => setShowPreview(!showPreview)}
-                                className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/50 px-4 py-2 rounded-xl transition-all"
-                              >
-                                <Eye className="w-4 h-4" />
-                                {showPreview ? t.editMode : t.showPreview}
-                              </button>
-                              {selectedToolId === 'resume' && (
-                                <div className="flex flex-col items-end gap-1">
-                                  <button
-                                    onClick={handleDownloadPDF}
-                                    disabled={isDownloading}
-                                    className="flex items-center gap-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl transition-all shadow-lg shadow-blue-100 dark:shadow-none disabled:bg-slate-400 disabled:shadow-none"
-                                  >
-                                    {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                                    {isDownloading ? t.generating : t.downloadPDF}
-                                  </button>
-                                  {downloadError && (
-                                    <span className="text-[10px] text-red-500 font-medium">{downloadError}</span>
-                                  )}
-                                </div>
-                              )}
-                              <button
-                                onClick={handleCopy}
-                                className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 px-4 py-2 rounded-xl transition-all"
-                              >
-                                {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-                                {copied ? t.copied : t.copy}
-                              </button>
-                            </div>
-                          </div>
+  {resumeStep < 5 ? (
+    <button
+      onClick={() => setResumeStep((prev) => Math.min(5, prev + 1))}
+      className="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center gap-2"
+    >
+      {t.nextStep} <ChevronRight className="w-4 h-4" />
+    </button>
+  ) : (
+    <button
+      onClick={handleGenerate}
+      disabled={isLoading}
+      className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-sm font-bold rounded-xl hover:shadow-xl hover:shadow-blue-200 dark:hover:shadow-none disabled:opacity-50 transition-all flex items-center gap-2"
+    >
+      {isLoading ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <Sparkles className="w-4 h-4" />
+      )}
+      {t.generateResume}
+    </button>
+  )}
+</div>
 
-                          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm">
-                            {showPreview && selectedToolId === 'resume' ? (
-                              <div className="p-8 sm:p-12 bg-white min-h-[1000px]">
-                                <ResumePreview data={resumeData} content={output} template={cvTemplate} t={t} />
-                              </div>
-                            ) : (
-                              <div className="p-8 prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-800/30">
-                                <Markdown>{output}</Markdown>
-                              </div>
-                            )}
-                          </div>
-                        </motion.div>
-                      )}
+{/* Left Column Input Fallback or Normal Tool UI */}
+<div className="space-y-6 mt-6">
+  <div className="space-y-2">
+    <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+      {t.yourInput}
+    </label>
+    <textarea
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      placeholder={
+        (t[`${selectedTool.id}Placeholder` as keyof typeof t] as string) ||
+        selectedTool.placeholder
+      }
+      className="w-full h-56 p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-[2rem] focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-slate-800 outline-none transition-all resize-none text-slate-800 dark:text-white placeholder:text-slate-400 font-medium"
+    />
+  </div>
+  <button
+    onClick={handleGenerate}
+    disabled={isLoading || !input.trim()}
+    className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-slate-800 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-200 dark:shadow-none disabled:shadow-none active:scale-[0.98]"
+  >
+    {isLoading ? (
+      <>
+        <Loader2 className="w-5 h-5 animate-spin" />
+        {t.generating}
+      </>
+    ) : (
+      <>
+        <Send className="w-5 h-5" />
+        {(t[`${selectedTool.id}Button` as keyof typeof t] as string) ||
+          selectedTool.buttonText}
+      </>
+    )}
+  </button>
+</div>
+
+{/* Right Column: Output */}
+<div className="space-y-6">
+  <AnimatePresence>
+    {output && (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-4 pt-4"
+      >
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
+            {t.result}
+          </label>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex items-center gap-2 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/50 px-4 py-2 rounded-xl transition-all"
+            >
+              <Eye className="w-4 h-4" />
+              {showPreview ? t.editMode : t.showPreview}
+            </button>
+            {selectedToolId === 'resume' && (
+              <div className="flex flex-col items-end gap-1">
+                <button
+                  onClick={handleDownloadPDF}
+                  disabled={isDownloading}
+                  className="flex items-center gap-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl transition-all shadow-lg shadow-blue-100 dark:shadow-none disabled:bg-slate-400 disabled:shadow-none"
+                >
+                  {isDownloading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Download className="w-4 h-4" />
+                  )}
+                  {isDownloading ? t.generating : t.downloadPDF}
+                </button>
+                {downloadError && (
+                  <span className="text-[10px] text-red-500 font-medium">
+                    {downloadError}
+                  </span>
+                )}
+              </div>
+            )}
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 px-4 py-2 rounded-xl transition-all"
+            >
+              {copied ? (
+                <Check className="w-4 h-4 text-green-500" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
+              {copied ? t.copied : t.copy}
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl overflow-hidden shadow-sm">
+          {showPreview && selectedToolId === 'resume' ? (
+            <div className="p-8 sm:p-12 bg-white min-h-[1000px]">
+              <ResumePreview
+                data={resumeData}
+                content={output}
+                template={cvTemplate}
+                t={t}
+              />
+            </div>
+          ) : (
+            <div className="p-8 prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-800/30">
+              <Markdown>{output}</Markdown>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
                     </AnimatePresence>
 
                     {/* Hidden Resume for PDF Generation */}
