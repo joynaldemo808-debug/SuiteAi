@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData, CVTemplate } from '../App';
+import { ResumeData, CVTemplate } from '../types';
 import Markdown from 'react-markdown';
 import { Mail, Phone, MapPin, Linkedin, Github } from 'lucide-react';
 

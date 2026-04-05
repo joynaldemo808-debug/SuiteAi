@@ -29,8 +29,8 @@ service cloud.firestore {
 
     function isAdmin() {
       return isAuthenticated() &&
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-          (request.auth.token.email == "Joynaldemo808@gmail.com" && request.auth.token.email_verified == true));
+        ((exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', 'user') == 'admin') ||
+          ('email' in request.auth.token && request.auth.token.email.lower() == "joynaldemo808@gmail.com" && request.auth.token.email_verified == true));
     }
 
     function hasRequiredFields(fields) {
@@ -69,11 +69,11 @@ service cloud.firestore {
       
       allow create: if isOwner(userId) && 
                       isValidUser(request.resource.data) &&
-                      (!('role' in request.resource.data) || isAdmin());
+                      (request.resource.data.get('role', 'user') == 'user' || isAdmin());
                       
       allow update: if isOwner(userId) && 
                       isValidUser(request.resource.data) &&
-                      (request.resource.data.role == resource.data.role || isAdmin()) &&
+                      (request.resource.data.get('role', 'user') == resource.data.get('role', 'user') || isAdmin()) &&
                       (request.resource.data.uid == resource.data.uid) &&
                       (request.resource.data.email == resource.data.email);
     }

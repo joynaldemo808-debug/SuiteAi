@@ -1,10 +1,48 @@
 export type ToolId = 'caption' | 'youtube' | 'grammar' | 'blog' | 'email' | 'career' | 'study' | 'recipe' | 'support' | 'fitness' | 'resume';
 
+export type CVTemplate = 'modern' | 'classic' | 'minimal';
+
+export interface ResumeData {
+  personal: {
+    name: string;
+    title: string;
+    email: string;
+    phone: string;
+    address: string;
+    summary: string;
+    linkedin: string;
+    github: string;
+    website: string;
+  };
+  experience: {
+    company: string;
+    role: string;
+    dates: string;
+    description: string;
+  }[];
+  education: {
+    degree: string;
+    institute: string;
+    year: string;
+  }[];
+  projects: {
+    name: string;
+    description: string;
+    link: string;
+  }[];
+  certifications: string;
+  skills: {
+    skills: string;
+    languages: string;
+  };
+}
+
 export interface Tool {
   id: ToolId;
   name: string;
   description: string;
   icon: string;
+  color: string;
   systemInstruction: string;
   placeholder: string;
   buttonText: string;
@@ -16,6 +54,7 @@ export const TOOLS: Tool[] = [
     name: 'Social Media Caption Generator',
     description: 'Create engaging captions for Facebook or Instagram.',
     icon: 'Share2',
+    color: 'bg-blue-600',
     systemInstruction: `Role: You are an experienced social media manager and copywriter. Your task is to create engaging and attractive captions for Facebook, Instagram, or LinkedIn based on the user's input or image description.
 
 Instructions:
@@ -31,6 +70,7 @@ Instructions:
     name: 'YouTube Video Script Writer',
     description: 'Create full scripts or outlines for YouTube videos.',
     icon: 'Youtube',
+    color: 'bg-red-600',
     systemInstruction: `Role: You are a professional YouTube scriptwriter. Your task is to create an engaging YouTube video script based on the video topic and brief description provided by the user.
 
 Instructions:
@@ -47,6 +87,7 @@ Instructions:
     name: 'Bengali Grammar & Spell Checker',
     description: 'Fix spelling and grammatical errors in Bengali text.',
     icon: 'CheckCircle',
+    color: 'bg-green-600',
     systemInstruction: `Role: You are a perfect Bengali language expert and proofreader. Your task is to find and correct all types of spelling and grammatical errors from the Bengali text provided by the user.
 
 Instructions:
@@ -61,6 +102,7 @@ Instructions:
     name: 'Blog Post Outline Maker',
     description: 'Create detailed structures or outlines for blog posts.',
     icon: 'FileText',
+    color: 'bg-indigo-600',
     systemInstruction: `Role: You are an SEO expert and content strategist. Your task is to create a detailed blog post outline for the topic provided by the user.
 
 Instructions:
@@ -75,6 +117,7 @@ Instructions:
     name: 'Professional Email Writer',
     description: 'Get help writing professional or formal emails.',
     icon: 'Mail',
+    color: 'bg-sky-600',
     systemInstruction: `Role: You are a professional communication expert. Your task is to create a formal or professional email according to the situation provided by the user.
 
 Instructions:
@@ -90,6 +133,7 @@ Instructions:
     name: 'AI Career Guide & Interview Coach',
     description: 'Prepare for job interviews and get CV tips.',
     icon: 'Briefcase',
+    color: 'bg-amber-600',
     systemInstruction: `Role: You are an experienced Human Resources (HR) specialist and career coach. Your task is to prepare the user for job interviews and answer their career-related questions.
 
 Instructions:
@@ -104,6 +148,7 @@ Instructions:
     name: 'Smart Study Note Maker',
     description: 'Create easy and memorable study notes from large texts.',
     icon: 'BookOpen',
+    color: 'bg-purple-600',
     systemInstruction: `Role: You are a skilled teacher and teaching assistant. Your task is to convert any complex or large text into easy and memorable study notes.
 
 Instructions:
@@ -118,6 +163,7 @@ Instructions:
     name: 'AI Recipe Creator',
     description: 'Create delicious recipes with ingredients you have at home.',
     icon: 'Utensils',
+    color: 'bg-orange-600',
     systemInstruction: `Role: You are an experienced Chef. Your task is to create delicious recipes based on the common ingredients the user has at home.
 
 Instructions:
@@ -132,6 +178,7 @@ Instructions:
     name: 'Customer Support Reply Generator',
     description: 'Create professional and polite replies for customers.',
     icon: 'MessageSquare',
+    color: 'bg-teal-600',
     systemInstruction: `Role: You are a polite and efficient customer support expert. Your task is to create beautiful and polite replies for various questions from business customers.
 
 Instructions:
@@ -146,6 +193,7 @@ Instructions:
     name: 'Fitness & Diet Planner',
     description: 'Exercise and diet routines for weight control and health.',
     icon: 'Dumbbell',
+    color: 'bg-rose-600',
     systemInstruction: `Role: You are a certified gym trainer and nutritionist. Your task is to create exercise and diet routines according to the user's physical goals.
 
 Instructions:
@@ -160,6 +208,7 @@ Instructions:
     name: 'Professional CV Writer',
     description: 'Create international standard professional CVs or resumes.',
     icon: 'FileUser',
+    color: 'bg-slate-800',
     systemInstruction: `You are a world-class professional CV and resume writer. Your task is to analyze the information provided by the user and create the main parts of a professional CV.
 
 Your responsibilities:
